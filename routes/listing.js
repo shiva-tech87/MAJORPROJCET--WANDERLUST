@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
-const { listingSchema ,reviewSchema} = require("../schema.js");
+const { listingSchema , reviewSchema } = require("../schema.js");
 const Listing = require("../models/listing.js");
 
 
@@ -35,14 +35,11 @@ router.get("/:id",  wrapAsync(async(req, res)=>{
 }));
 
 //Create Route
-router.post("",
+router.post("/", validateListing,
     wrapAsync(async (req ,res, next)=>{
-    let result = listingSchema.validate(req.body);
-    if(result.error){     
-    throw new ExpressError (400,"send valid data for listing");   
-    }
     const newListing = new Listing(req.body.listing);
     await newListing.save();
+    req.flash("success"," New Listing Created!");
     res.redirect("/listings");
 })
 );
@@ -58,11 +55,9 @@ router.get("/:id/edit",  wrapAsync(async (req, res)=>{
 
 //update route
 router.put("/:id/", wrapAsync (async (req,res)=>{
-     if(!req.body.listen){
-            throw new ExpressError (400,"send valid data for listing");
-        }
     let {id} = req.params;
     await Listing.findByIdAndUpdate(id, {...req.body.listing});
+     req.flash("success"," Listing Updated!");
     res.redirect(`/listings/${id}`);
 
 }));
@@ -72,6 +67,7 @@ router.delete("/:id", wrapAsync(async(req,res)=>{
      let {id} = req.params;
      let deleteListings = await Listing.findByIdAndDelete(id);
      console.log(deleteListings);
+      req.flash("success"," Listing Deleted!");
      res.redirect("/listings");
 })); 
 
