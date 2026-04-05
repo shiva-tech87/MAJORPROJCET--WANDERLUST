@@ -58,8 +58,8 @@ body {
     height: 8rem;
     background-color: #ebebeb;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: space-evenly;
+    justify-content:  space-evenly;
+    align-items:center;
  }
  /* cards */
  .listing-card {
@@ -117,3 +117,13 @@ body {
    padding-left: 0;
    padding-right: 0
  }
+
+ body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container, .row {
+  flex: 1;
+}
